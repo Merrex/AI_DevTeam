@@ -6,6 +6,8 @@ import json
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 from planner import FileSpec, TechStack
+import os
+from agents.llm_utils import generate_code_with_llm
 
 
 @dataclass
@@ -30,11 +32,13 @@ class BackendAgent:
             TechStack.NODEJS: self._generate_nodejs_code,
         }
     
-    def generate_file(self, file_spec: FileSpec, project_context: Dict) -> str:
-        """Generate backend code for a specific file."""
+    def generate_file(self, file_spec: FileSpec, project_context: Dict, use_llm: bool = False) -> str:
+        """Generate backend code for a specific file. If use_llm is True, use LLM for generation."""
+        if use_llm:
+            prompt = self._build_llm_prompt(file_spec, project_context)
+            return generate_code_with_llm(prompt)
         if file_spec.tech_stack not in self.supported_frameworks:
             raise ValueError(f"Unsupported backend framework: {file_spec.tech_stack}")
-        
         generator = self.supported_frameworks[file_spec.tech_stack]
         return generator(file_spec, project_context)
     
@@ -454,7 +458,6 @@ async def delete_{router_name}(item_id: int):
     
     def _generate_flask_code(self, file_spec: FileSpec, project_context: Dict) -> str:
         """Generate Flask code."""
-        # TODO: Implement Flask code generation
         return f"""
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -464,7 +467,7 @@ CORS(app)
 
 @app.route('/')
 def home():
-    return jsonify({{"message": "Welcome to {project_context.get('project_name', 'API')}"}}})
+    return jsonify({{"message": "Welcome to {project_context.get('project_name', 'API')}"}})
 
 @app.route('/health')
 def health():
@@ -518,4 +521,15 @@ app.get('/health', (req, res) => {{
 app.listen(PORT, () => {{
     console.log(`Server is running on port ${{PORT}}`);
 }});
+""".strip()
+
+    def _build_llm_prompt(self, file_spec: FileSpec, project_context: Dict) -> str:
+        """Build a prompt for the LLM based on file spec and context."""
+        return f"""
+Generate the following backend file for a {project_context.get('tech_stack', {}).get('backend', 'backend')} project:
+File path: {file_spec.path}
+Description: {file_spec.description}
+Project features: {project_context.get('features', [])}
+Integrations: {project_context.get('integrations', [])}
+Please provide the complete code for this file.
 """.strip()
