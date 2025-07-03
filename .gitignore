@@ -23,3 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.zip
+*.tar.gz
+*.egg-info/
+.ipynb_checkpoints/
