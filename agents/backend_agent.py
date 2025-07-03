@@ -467,11 +467,11 @@ CORS(app)
 
 @app.route('/')
 def home():
-    return jsonify({{"message": "Welcome to {project_context.get('project_name', 'API')}"}})
+    return jsonify({{{{"message": "Welcome to {project_context.get('project_name', 'API')}"}}}})
 
 @app.route('/health')
 def health():
-    return jsonify({{"status": "healthy"}})
+    return jsonify({{{{"status": "healthy"}}}})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
@@ -511,11 +511,11 @@ app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {{
-    res.json({{ message: 'Welcome to {project_context.get('project_name', 'API')}' }});
+    res.json({{{{ message: 'Welcome to {project_context.get('project_name', 'API')}' }}}});
 }});
 
 app.get('/health', (req, res) => {{
-    res.json({{ status: 'healthy' }});
+    res.json({{{{ status: 'healthy' }}}});
 }});
 
 app.listen(PORT, () => {{
