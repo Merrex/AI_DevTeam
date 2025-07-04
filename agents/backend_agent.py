@@ -5,7 +5,7 @@ Backend Agent - Generates API routes and services for various backend frameworks
 import json
 from typing import Dict, List, Optional
 from dataclasses import dataclass
-from planner import FileSpec, TechStack
+from agents.types import FileSpec, TechStack
 import os
 from agents.llm_utils import generate_code_with_llm
 
