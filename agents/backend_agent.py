@@ -533,3 +533,16 @@ Project features: {project_context.get('features', [])}
 Integrations: {project_context.get('integrations', [])}
 Please provide the complete code for this file.
 """.strip()
+
+class MistralBackendAgent:
+    """Backend agent using Mistral/CodeGemma LLM."""
+    def generate_file(self, file_spec, project_context):
+        # This is a template for using Mistral/CodeGemma as the code generator
+        prompt = f"Generate the backend file {file_spec.path} for the following project context: {project_context}"
+        code = generate_code_with_llm(
+            prompt,
+            agent_name='backend_agent',
+            max_new_tokens=1024,
+            temperature=0.2
+        )
+        return code

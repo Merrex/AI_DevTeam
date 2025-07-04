@@ -7,6 +7,7 @@ import re
 from typing import Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
+from agents.llm_utils import generate_code_with_llm
 
 
 class FileType(Enum):
@@ -544,6 +545,19 @@ def create_generation_plan(prompt: str) -> GenerationPlan:
     """Create a generation plan from a natural language prompt."""
     planner = ProjectPlanner()
     return planner.create_plan(prompt)
+
+
+class ZephyrPlanner:
+    """Planner using Zephyr 1.3B LLM."""
+    def plan(self, prompt: str) -> str:
+        # This is a template for using Zephyr as the planner
+        plan = generate_code_with_llm(
+            f"Generate a file generation plan for the following prompt: {prompt}",
+            agent_name='planner',
+            max_new_tokens=512,
+            temperature=0.2
+        )
+        return plan
 
 
 if __name__ == "__main__":
