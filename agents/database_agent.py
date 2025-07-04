@@ -4,7 +4,8 @@ Database Agent - Generates database schemas, models, and queries.
 
 from typing import Dict, List, Optional
 from dataclasses import dataclass
-from planner import FileSpec, TechStack
+from agents.types import FileSpec, TechStack
+from agents.llm_utils import generate_code_with_llm
 
 
 @dataclass
@@ -74,7 +75,7 @@ class DatabaseAgent:
                 "    hashed_password VARCHAR(255) NOT NULL,",
                 "    is_active BOOLEAN DEFAULT TRUE,",
                 "    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,",
-                "    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP",
+                "    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP"
                 ");",
                 "",
                 "-- Indexes for users table",
@@ -156,7 +157,7 @@ class DatabaseAgent:
                 "    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,",
                 "    product_id UUID REFERENCES products(id) ON DELETE CASCADE,",
                 "    quantity INTEGER NOT NULL,",
-                "    price DECIMAL(10, 2) NOT NULL",
+                "    price DECIMAL(10, 2) NOT NULL"
                 ");",
                 ""
             ])
@@ -415,3 +416,15 @@ class DatabaseAgent:
 
 -- TODO: Implement {file_spec.description}
 """.strip()
+
+class MistralDatabaseAgent:
+    """Database agent using Mistral/CodeGemma LLM."""
+    def generate_file(self, file_spec, project_context):
+        prompt = f"Generate the database file {file_spec.path} for the following project context: {project_context}"
+        code = generate_code_with_llm(
+            prompt,
+            agent_name='database_agent',
+            max_new_tokens=1024,
+            temperature=0.2
+        )
+        return code

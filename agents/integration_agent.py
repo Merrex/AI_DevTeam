@@ -4,7 +4,8 @@ Integration Agent - Generates code for third-party integrations.
 
 from typing import Dict, List, Optional
 from dataclasses import dataclass
-from planner import FileSpec
+from agents.types import FileSpec
+from agents.llm_utils import generate_code_with_llm
 
 
 @dataclass
@@ -800,3 +801,16 @@ class GenericIntegrationService:
 # Global integration service instance
 integration_service = GenericIntegrationService()
 """.strip()
+
+
+class MistralIntegrationAgent:
+    """Integration agent using Mistral/CodeGemma LLM."""
+    def generate_file(self, file_spec, project_context):
+        prompt = f"Generate the integration file {file_spec.path} for the following project context: {project_context}"
+        code = generate_code_with_llm(
+            prompt,
+            agent_name='integration_agent',
+            max_new_tokens=1024,
+            temperature=0.2
+        )
+        return code

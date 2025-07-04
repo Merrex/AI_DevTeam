@@ -6,7 +6,7 @@ import re
 import ast
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
-from planner import FileSpec
+from agents.types import FileSpec
 from agents.llm_utils import generate_code_with_llm
 
 
