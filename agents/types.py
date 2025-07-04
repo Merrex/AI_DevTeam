@@ -14,6 +14,7 @@ class TechStack(Enum):
     MONGODB = "mongodb"
     MYSQL = "mysql"
     SQLITE = "sqlite"
+    FLUTTER = "flutter"
     # Add more as needed
 
 @dataclass
