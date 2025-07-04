@@ -36,3 +36,22 @@ __pycache__/
 *.tar.gz
 *.egg-info/
 .ipynb_checkpoints/
+
+# Jupyter Notebooks
+*.ipynb
+
+# Checkpoints and backup files
+*.checkpoint
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+
+# Output and log files
+*.log
+*.out
+
+# System files
+.DS_Store
+Thumbs.db
