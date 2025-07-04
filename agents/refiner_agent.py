@@ -7,6 +7,7 @@ import ast
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from planner import FileSpec
+from agents.llm_utils import generate_code_with_llm
 
 
 @dataclass
@@ -523,3 +524,20 @@ class RefinerAgent:
             report_lines.append("## No issues found! 🎉")
         
         return "\n".join(report_lines)
+
+
+class WizardCoderRefiner:
+    """Refiner agent using WizardCoder LLM."""
+    def refine(self, files: dict, project_context: dict) -> dict:
+        # This is a template for using WizardCoder as the refiner
+        refined_files = {}
+        for path, code in files.items():
+            prompt = f"Refine and improve the following code for consistency and best practices.\n\n{code}"
+            refined_code = generate_code_with_llm(
+                prompt,
+                agent_name='refiner_agent',
+                max_new_tokens=1024,
+                temperature=0.2
+            )
+            refined_files[path] = refined_code
+        return refined_files

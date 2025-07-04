@@ -5,24 +5,28 @@ import torch
 # === Agent-to-model configuration ===
 # You can set a different model (and token/key) for each agent here.
 AGENT_LLM_CONFIG = {
+    'planner': {
+        'model_name': os.getenv('PLANNER_MODEL', 'HuggingFaceH4/zephyr-1.3b'),
+        'token': os.getenv('PLANNER_TOKEN', None),
+    },
     'backend_agent': {
-        'model_name': os.getenv('BACKEND_AGENT_MODEL', 'deepseek-ai/deepseek-coder-1.3b-base'),
-        'token': os.getenv('BACKEND_AGENT_TOKEN', None),  # Placeholder for API key/token if needed
+        'model_name': os.getenv('BACKEND_AGENT_MODEL', 'mistralai/Mistral-7B-Instruct-v0.2'),
+        'token': os.getenv('BACKEND_AGENT_TOKEN', None),
     },
     'frontend_agent': {
-        'model_name': os.getenv('FRONTEND_AGENT_MODEL', 'deepseek-ai/deepseek-coder-1.3b-base'),
+        'model_name': os.getenv('FRONTEND_AGENT_MODEL', 'mistralai/Mistral-7B-Instruct-v0.2'),
         'token': os.getenv('FRONTEND_AGENT_TOKEN', None),
     },
     'database_agent': {
-        'model_name': os.getenv('DATABASE_AGENT_MODEL', 'deepseek-ai/deepseek-coder-1.3b-base'),
+        'model_name': os.getenv('DATABASE_AGENT_MODEL', 'mistralai/Mistral-7B-Instruct-v0.2'),
         'token': os.getenv('DATABASE_AGENT_TOKEN', None),
     },
     'integration_agent': {
-        'model_name': os.getenv('INTEGRATION_AGENT_MODEL', 'deepseek-ai/deepseek-coder-1.3b-base'),
+        'model_name': os.getenv('INTEGRATION_AGENT_MODEL', 'mistralai/Mistral-7B-Instruct-v0.2'),
         'token': os.getenv('INTEGRATION_AGENT_TOKEN', None),
     },
     'refiner_agent': {
-        'model_name': os.getenv('REFINER_AGENT_MODEL', 'deepseek-ai/deepseek-coder-1.3b-base'),
+        'model_name': os.getenv('REFINER_AGENT_MODEL', 'WizardLM/WizardCoder-1B-V1.0'),
         'token': os.getenv('REFINER_AGENT_TOKEN', None),
     },
 }
