@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
 from agents.llm_utils import generate_code_with_llm
+from agents.types import FileSpec, TechStack
 
 
 class FileType(Enum):
@@ -17,33 +18,6 @@ class FileType(Enum):
     INTEGRATION = "integration"
     CONFIG = "config"
     DOCUMENTATION = "documentation"
-
-
-class TechStack(Enum):
-    REACT = "react"
-    VUE = "vue"
-    ANGULAR = "angular"
-    FLUTTER = "flutter"
-    FASTAPI = "fastapi"
-    FLASK = "flask"
-    DJANGO = "django"
-    NODEJS = "nodejs"
-    POSTGRESQL = "postgresql"
-    MONGODB = "mongodb"
-    MYSQL = "mysql"
-    SQLITE = "sqlite"
-
-
-@dataclass
-class FileSpec:
-    """Specification for a file to be generated."""
-    path: str
-    type: FileType
-    agent: str
-    dependencies: List[str]
-    description: str
-    priority: int = 1
-    tech_stack: Optional[TechStack] = None
 
 
 @dataclass
