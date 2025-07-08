@@ -9,12 +9,17 @@ from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
 import traceback
 
-from planner import GenerationPlan, FileSpec, create_generation_plan
+from planner import GenerationPlan, FileSpec, create_generation_plan, ZephyrPlanner
 from agents import (
     FrontendAgent, BackendAgent, DatabaseAgent, 
     IntegrationAgent, RefinerAgent
 )
+from agents.backend_agent import MistralBackendAgent
+from agents.refiner_agent import WizardCoderRefiner
 from file_writer import FileWriter
+from agents.frontend_agent import MistralFrontendAgent
+from agents.database_agent import MistralDatabaseAgent
+from agents.integration_agent import MistralIntegrationAgent
 
 
 @dataclass
@@ -33,12 +38,14 @@ class RepositoryGenerator:
     
     def __init__(self, output_dir: str = "./generated_repos"):
         self.output_dir = output_dir
+        # Use new agent pipeline
+        self.planner = ZephyrPlanner()
         self.agents = {
-            'frontend_agent': FrontendAgent(),
-            'backend_agent': BackendAgent(),
-            'database_agent': DatabaseAgent(),
-            'integration_agent': IntegrationAgent(),
-            'refiner_agent': RefinerAgent()
+            'frontend_agent': MistralFrontendAgent(),      # Use Mistral for frontend
+            'backend_agent': MistralBackendAgent(),        # Use Mistral for backend
+            'database_agent': MistralDatabaseAgent(),      # Use Mistral for database
+            'integration_agent': MistralIntegrationAgent(),# Use Mistral for integration
+            'refiner_agent': WizardCoderRefiner()          # Use WizardCoder for refinement
         }
         self.file_writer = FileWriter()
         
@@ -50,17 +57,20 @@ class RepositoryGenerator:
         start_time = asyncio.get_event_loop().time()
         
         try:
-            # Step 1: Create generation plan
-            print("📋 Creating generation plan...")
+            # Step 1: Use ZephyrPlanner for planning
+            print("📋 Creating generation plan with Zephyr...")
+            plan_str = self.planner.plan(prompt)
+            # Optionally, parse plan_str into GenerationPlan if needed
+            # For now, fallback to original planner for structure
             plan = create_generation_plan(prompt)
             
             # Step 2: Generate files using agents
             print("🔨 Generating files...")
             generated_files = await self._generate_files(plan)
             
-            # Step 3: Refine code for consistency
-            print("✨ Refining code...")
-            refined_files = self._refine_code(generated_files, plan)
+            # Step 3: Refine code for consistency using WizardCoder
+            print("✨ Refining code with WizardCoder...")
+            refined_files = self.agents['refiner_agent'].refine(generated_files, plan)
             
             # Step 4: Write files to disk
             print("💾 Writing files...")

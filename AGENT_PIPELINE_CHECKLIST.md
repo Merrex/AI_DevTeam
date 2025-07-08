@@ -62,4 +62,4 @@ Implement a modular agent pipeline:
 - Ensure each agent is modular and can be swapped easily.
 - Consider adding logging for each stage (planner, generator, refiner, QA, meetings).
 - Validate output at each stage for correctness.
-- Next step: Consider immediate plugin or integration with Cursor, or wrap the full Cursor repo with this agentic application. 
+- Next step: Consider immediate plugin or integration with Cursor, or wrap the full Cursor repo with this agentic application.
